@@ -2,6 +2,8 @@
 #include<SDL.h>
 #include<list>
 
+//----------------------------------------------------------------------------
+//                                  Pos
 struct Pos
 {
     float x;
@@ -15,6 +17,8 @@ struct Pos
 };
 
 
+//----------------------------------------------------------------------------
+//                                  mySDLManager  
 class mySDLManager
 {
     private:
@@ -45,19 +49,33 @@ class mySDLManager
 
 
 //----------------------------------------------------------------------------
+//                                  Corp
+class Corp
+{
+    public:
+        mySDLManager* manager;
+        Pos pos, vel, acc;
+        float mass;
+        int color[3];
+        void setColor(int r, int g, int b);
+        void update();
+        virtual void draw() = 0;
+        virtual void checkCollisions() = 0;
+        virtual void rotateG(float angle) = 0;
+};
 
-class Ball 
+
+//----------------------------------------------------------------------------
+//                                     Ball
+class Ball : public Corp
 {
     private:
-        mySDLManager* manager;
         int mHeight, mWidth;
         SDL_Renderer* mRenderer;
         const float drawXIncremet = 1;
 
     public:
-        float posx, posy, r, mass;
-        float velx, vely, accx, accy;
-        int color[3]; 
+        float r;
         Ball(mySDLManager* manager, float posx, float posy, float r, float velx, float vely,
                 float accx, float accy);
         //Delegating Contructors
@@ -66,59 +84,71 @@ class Ball
         Ball(mySDLManager* manager, float posx, float posy, float r) : 
                 Ball(manager, posx, posy, r, 0, 0, 0, 0){};
 
-        void setColor(int r, int g, int b);
         void draw();
         float calcY(float* x, float Cx, float Cy, float r, float x0, float y0);
         void adjust(float x0, float y0, float* x, float* y);
-        void update();
         void checkCollisions();
-        std::string toString();
+        void rotateG(float angle);
 };
 
 
 //----------------------------------------------------------------------------
+//                                 Triangle
+class Triangle : public Corp
+{
+    public:
+        Pos top, right, left;
+        float l, h;
+        Triangle(mySDLManager* manager, Pos mid, Pos top) : 
+            Triangle(manager, mid.x, mid.y, top.x, top.y){};
+        Triangle(mySDLManager* manager, float mx, float my, float vx, float vy);
+        void draw();
+        void rotateG(float angle);
+        void checkCollisions();
+};
 
-class BallsList
+
+//----------------------------------------------------------------------------
+//                                  CorpList
+class CorpList
 {
     private:
-        std::list<Ball*> balls;
+        std::list<Corp*> corps;
 
     public:
-        BallsList();
+        CorpList();
         int size();
-        bool add(Ball* b);
-        bool remove(Ball* b);
-        Ball* getBall(int i);
-        std::list<Ball*> getBalls();
+        bool add(Corp* b);
+        bool remove(Corp* b);
+        Corp* getCorp(int i);
+        std::list<Corp*> getCorps();
 };  
 
 
 //----------------------------------------------------------------------------
-
+//                                  Engine
 class Engine
 { 
     private:
         mySDLManager* manager;
-        BallsList ballsList;
+        CorpList corpList;
 
     public:
         Engine(mySDLManager* manager);
         mySDLManager* getManager();
-        bool addBall(Ball* b);
-        bool addBall(float posx, float posy, float r);
-        bool addBall(float posx, float posy, float r, float velx, float vely);
-        bool addBall(float posx, float posy, float r, float velx, float vely, float accx, float accy);
-        bool removeBalls(Ball* b);
-        BallsList getBallsList();
+        bool addCorps(Corp* b);
+        bool removeCorp(Corp* b);
+        bool removeCorpI(int i);
+        CorpList getCorpList();
         void draw();
         void applyPhysics();
         void update();
-        //void checkCollisions(Ball* b, bool* previusInRender);
         void gravity();
 };
 
-//----------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------
+//                                  Vector
 class Vector
 {
     private:
@@ -149,26 +179,9 @@ class Vector
         Vector* moove(float new_x, float new_y);
 };
 
-//----------------------------------------------------------------------------
-
-class Triangle
-{
-    private:
-        mySDLManager* manager;
-        Pos mid, top, right, left;
-        float l, h;
-        int color[3];
-
-    public:
-        Triangle(mySDLManager* manager, Pos top, Pos mid);
-        Triangle(mySDLManager* manager, float mx, float my, float vx, float vy);
-        void setColor(int r, int g, int b);
-        void draw();
-        void rotateG(float angle);
-};
 
 //----------------------------------------------------------------------------
-
+//                                  Utils
 class Utils
 {   
     private:
