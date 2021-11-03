@@ -1,6 +1,6 @@
 #include"../../include/Engine.h"
-#include<SDL.h>
 #include<iostream>
+#include<SDL.h>
 
 //----------------------------------------------------------------------------
 //#         MYSDLMANAGER DEFINITIONS
@@ -62,11 +62,11 @@ void mySDLManager::handleEvents()
     {
         switch (event.type)
         {
-        case SDL_QUIT:
-            isRunning = false;
-            break;
-        default:
-            break;
+            case SDL_QUIT:
+                isRunning = false;
+                break;
+            default:
+                break;
         }
     }
 }

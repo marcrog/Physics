@@ -1,4 +1,3 @@
-
 #include<SDL.h>
 #include<list>
 
@@ -25,14 +24,14 @@ class mySDLManager
         SDL_Window* window;
         SDL_Renderer* renderer;
         const char* title;
-        int xpos;
-        int ypos;
         int width;
         int height;
         int flags;
         bool isRunning; 
 
         public:
+            int xpos;
+            int ypos;
             mySDLManager(const char* title, int xpos, int ypos, int width, int
                     height, int flags);
             SDL_Renderer* getRenderer();
@@ -140,6 +139,7 @@ class Engine
         bool removeCorp(Corp* b);
         bool removeCorpI(int i);
         CorpList getCorpList();
+        Corp* getCorpI(int i);
         void draw();
         void applyPhysics();
         void update();
@@ -191,3 +191,6 @@ class Utils
         static void adjust(float* y, float screen_height);
         static void adjust(Pos* p, float screen_height);
 };
+
+
+void mainLoop(Engine* engine, mySDLManager* manager);
