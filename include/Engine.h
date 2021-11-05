@@ -57,7 +57,10 @@ class Corp
         Pos pos, vel, acc;
         float mass;
         int color[3];
+        bool fill;
+        int colorF[3];
         void setColor(int r, int g, int b);
+        void setColorF(int r, int g, int b);
         void update();
         virtual void draw() = 0;
         virtual void checkCollisions() = 0;

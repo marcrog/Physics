@@ -1,6 +1,8 @@
 #include"../../include/Engine.h"
 #include <string>
 #include<iostream>
+#include <chrono>
+#include<thread>
 
 //----------------------------------------------------------------------------
 //#         BALL DEFINITIONS
@@ -19,8 +21,9 @@ Ball::Ball(mySDLManager* manager, float posx, float posy, float r, float velx, f
     Ball::mHeight = manager -> getHeight();
     Ball::mWidth = manager -> getWidth();
     Ball::mRenderer = manager -> getRenderer();
-
+    Ball::fill = false;
     Ball::setColor(0, 255, 0);
+    Ball::setColorF(0, 0, 255);
 }
 
 void Ball::draw()
@@ -43,6 +46,16 @@ void Ball::draw()
         SDL_SetRenderDrawColor(mRenderer, color[0], color[1] , color[2], 255);
         SDL_RenderDrawLineF(mRenderer, x1, y1, x1, y1 + delta);
         SDL_RenderDrawLineF(mRenderer, x1, ny1, x1, ny1 + ndelta);
+        if(fill && (x1 != -r + pos.x && x1 != r - 1 + pos.x))
+        {
+            SDL_SetRenderDrawColor(mRenderer, colorF[0], colorF[1] , colorF[2], 255);
+            if(x1 < pos.x)
+                SDL_RenderDrawLineF(mRenderer, x1, y1 + 1, x1, ny1 - 1);
+            else if(x1 > pos.x)
+                SDL_RenderDrawLineF(mRenderer, x1, y1 + delta + 1, x1, ny1 + ndelta - 1);
+            else
+                SDL_RenderDrawLineF(mRenderer, x1, y1 + delta + 1, x1, ny1 - 1);
+        }
     }
 }
 
@@ -79,24 +92,28 @@ void Ball::checkCollisions()
     {
         pos.x = 0 + r + 1;
         vel.x *= -1;
+        //acc.x *= -1;
         vel.x += elasticità;
     }
     if(dxEdge > manager->getWidth())
     {
         pos.x = manager->getWidth() - r - 1;
         vel.x *= -1;
+        //acc.x *= -1;
         vel.x -= elasticità;
     }
     if(dwEdge < 0)
     {
         pos.y = 0 + r + 1;
         vel.y *= -1;
+        //acc.y *= -1;
         vel.y += elasticità;
     }
     if(upEdge > manager->getHeight())
     {
         pos.y = manager -> getHeight() - r - 1;
         vel.y *= -1;
+        //acc.y *= -1;
         vel.y -= elasticità;
     }
 }

@@ -15,13 +15,8 @@ int main()
                                     600, 600, 0));
     mySDLManager* manager = engine -> getManager();
     manager->init();
-    Corp* b = new Ball(manager, 300, 300, 50);
-    Corp* t = new Triangle(manager, 300, 300, 300, 350);
-    t->vel.x = 0.1;
-    t->acc.x = 0;
-    t->vel.y = 0;
-    t->acc.y = 0;
-    engine -> addCorps(t);
+    Corp* b = new Ball(manager, 300, 300, 50, 10, -7, -0.01, 0);
+    b->fill = true;
     engine -> addCorps(b);
 
     while (manager -> running())
@@ -33,11 +28,10 @@ int main()
         SDL_SetRenderDrawColor(manager -> getRenderer(), 30, 32, 45, 255);
         SDL_RenderClear(manager -> getRenderer());
         //Engine
-        engine->draw();
-        t->rotateG(1);
-        t->update();
+        b->draw();
+        b->update();
         //Present Render and handle exit
-        SDL_RenderPresent(manager -> getRenderer()); 
+        SDL_RenderPresent(manager -> getRenderer());
         manager -> handleEvents();
         // ]
 
