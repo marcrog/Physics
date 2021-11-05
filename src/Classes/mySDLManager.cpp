@@ -54,6 +54,7 @@ bool mySDLManager::init()
     return true;
 }
 
+
 //If an SDL_Quit event is triggered isRunning = false
 void mySDLManager::handleEvents()
 {
