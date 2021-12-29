@@ -28,7 +28,7 @@ Triangle::Triangle(mySDLManager* manager, float mx, float my ,float tx, float ty
 
 void Triangle::draw()
 {
-    SDL_SetRenderDrawColor(manager -> getRenderer(), 0, 0 , 255, 255);
+    SDL_SetRenderDrawColor(manager -> getRenderer(), color[0], color[1] , color[2], 255);
     SDL_RenderDrawLineF(manager -> getRenderer(), top.x, top.y, right.x, right.y);
     SDL_RenderDrawLineF(manager -> getRenderer(), top.x, top.y, left.x, left.y);
     SDL_RenderDrawLineF(manager -> getRenderer(), left.x, left.y, right.x, right.y);
@@ -40,12 +40,21 @@ void Triangle::rotateG(float angolo_dato)
     Vector* r = new Vector(manager, pos.x, pos.y, right.x, right.y);
     Vector* l = new Vector(manager, pos.x, pos.y, left.x, left.y);
     Vector* arr [] = {t, r, l};
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < 3; i++){
        arr[i]->rotateD(angolo_dato);
+       t->draw();
+       r->draw();
+       l->draw();
+    }
     top = t->end;
     right = r->end;
     left = l->end;
 }
 
 void Triangle::checkCollisions(){}
+
+void Triangle::applyGravity()
+{
+    acc.y = -1;
+}
 

@@ -7,6 +7,7 @@
 
 Engine::Engine(mySDLManager* manager){
     Engine::manager = manager;
+    initial = this;
 };
 
 mySDLManager* Engine::getManager()
@@ -39,22 +40,32 @@ void Engine::draw()
 void Engine::update()
 {
     for(int i = 0; i < corpList.size(); i++)
-        corpList.getCorp(i)->update();
-}
-
-void Engine::applyPhysics()
-{
-    for(int i = 0; i < corpList.size(); i++){
-        Corp* temp = corpList.getCorp(i);
-        temp -> update();
-        //Engine::checkCollisions(temp, &previusInRender);
-    }
-}
-
-void Engine::gravity()
-{
-    for(int i = 0; i < corpList.size(); i++)
     {
-        corpList.getCorp(i) -> acc.y = -1;
-    }
+        Corp* temp = corpList.getCorp(i);
+        if(collisions)
+            temp->checkCollisions();
+        if(gravity)
+            temp->applyGravity();
+        temp->update();
+    }    
+}
+
+void Engine::applyGravity()
+{
+    gravity = true;
+}
+
+void Engine::applyCollisions()
+{
+    collisions = true;
+}
+
+void Engine::reset()
+{
+    Engine::gravity = initial->gravity;
+    Engine::collisions = initial->collisions;
+    for(int i = 0; i < corpList.size(); i++)
+        corpList.remove(corpList.getCorp(i));
+    Engine::corpList = initial->corpList;
+
 }

@@ -34,11 +34,6 @@ bool CorpList::remove(Corp* b)
         return false;
 }
 
-std::list<Corp*> CorpList::getCorps()
-{
-    return corps;
-}
-
 Corp* CorpList::getCorp(int i)
 {
     int j = 0;

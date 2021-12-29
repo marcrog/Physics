@@ -18,9 +18,9 @@ Ball::Ball(mySDLManager* manager, float posx, float posy, float r, float velx, f
     Ball::vel.y = vely;
     Ball::acc.x = accx;
     Ball::acc.y = accy;
-    Ball::mHeight = manager -> getHeight();
-    Ball::mWidth = manager -> getWidth();
-    Ball::mRenderer = manager -> getRenderer();
+    Ball::mHeight = manager -> height;
+    Ball::mWidth = manager -> width;
+    Ball::mRenderer = manager -> renderer;
     Ball::fill = false;
     Ball::setColor(0, 255, 0);
     Ball::setColorF(0, 0, 255);
@@ -87,7 +87,7 @@ void Ball::checkCollisions()
     float dxEdge = pos.x + r;
     float upEdge = pos.y + r;
     float dwEdge = pos.y - r;
-    float elasticità = 0;
+    float elasticità = -1;
     if(sxEdge < 0)
     {
         pos.x = 0 + r + 1;
@@ -95,9 +95,9 @@ void Ball::checkCollisions()
         //acc.x *= -1;
         vel.x += elasticità;
     }
-    if(dxEdge > manager->getWidth())
+    if(dxEdge > manager->width)
     {
-        pos.x = manager->getWidth() - r - 1;
+        pos.x = manager->width - r - 1;
         vel.x *= -1;
         //acc.x *= -1;
         vel.x -= elasticità;
@@ -109,13 +109,28 @@ void Ball::checkCollisions()
         //acc.y *= -1;
         vel.y += elasticità;
     }
-    if(upEdge > manager->getHeight())
+    if(upEdge > manager->height)
     {
-        pos.y = manager -> getHeight() - r - 1;
+        pos.y = manager -> height - r - 1;
         vel.y *= -1;
         //acc.y *= -1;
         vel.y -= elasticità;
     }
 }
 
+void Ball::applyGravity()
+{
+    acc.y = -1;
+}
+
 void Ball::rotateG(float angle){}
+
+void Ball::followMouse()
+{
+    SDL_Event event;
+    if(SDL_PollEvent(&event))
+    {
+        if(event.type == SDL_MOUSEBUTTONDOWN)
+            fill = true;
+    }
+}

@@ -56,19 +56,18 @@ bool mySDLManager::init()
 
 
 //If an SDL_Quit event is triggered isRunning = false
-void mySDLManager::handleEvents()
+void mySDLManager::handleEvents(bool* exe)
 {
     SDL_Event event;
     if(SDL_PollEvent(&event))
     {
-        switch (event.type)
+        if(event.type == SDL_QUIT)
         {
-        case SDL_QUIT:
             isRunning = false;
-            break;
-        default:
-            break;
+            *exe = false;
         }
+        else if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+            isRunning = false;
     }
 }
 
@@ -93,4 +92,9 @@ int mySDLManager::getWidth()
 int mySDLManager::getHeight()
 {   
     return height;
+}
+
+void mySDLManager::setRunning(bool change)
+{
+    isRunning = change;
 }

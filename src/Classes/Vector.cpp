@@ -16,10 +16,11 @@ Vector::Vector(mySDLManager* manager, float start_x, float start_y, float end_x,
     Vector::start = start_;
     Vector::end = end_;
     Vector::adjust = adjust;
-    Vector::compx = abs(getMag_x());
-    Vector::compy = abs(getMag_y());
+    Vector::mag_x = getMag_x();
+    Vector::mag_y = getMag_y();
     Vector::mag = getMag();
     Vector::angle = getAngle();
+    Vector::angleD = getAngleD();
     Vector::setColor(255, 0, 0); 
 }
 
@@ -32,11 +33,11 @@ void Vector::setColor(int r, int g, int b)
 
 void Vector::draw()
 {
-    SDL_SetRenderDrawColor(manager -> getRenderer(), color[0], color[1], color[2], 255);
+    SDL_SetRenderDrawColor(manager -> renderer, color[0], color[1], color[2], 255);
     if(adjust)
-        SDL_RenderDrawLineF(manager->getRenderer(), start.x, Utils::adjust(start.y, manager->getHeight()) , end.x, Utils::adjust(end.y, manager->getHeight()));
+        SDL_RenderDrawLineF(manager->renderer, start.x, Utils::adjust(start.y, manager->height) , end.x, Utils::adjust(end.y, manager->height));
     else
-        SDL_RenderDrawLineF(manager->getRenderer(), start.x, start.y , end.x, end.y);
+        SDL_RenderDrawLineF(manager->renderer, start.x, start.y , end.x, end.y);
 }
 
 float Vector::getMag_x()
@@ -51,7 +52,13 @@ float Vector::getMag_y()
 
 float Vector::getMag()
 {
-    return sqrtf(powf(compx, 2) + powf(compy, 2));
+    return sqrtf(powf(abs(mag_x), 2) + powf(abs(mag_y), 2));
+}
+
+void Vector::setMag(float new_mag)
+{
+    mag_x = new_mag * sinf(getAngle());
+    mag_y = new_mag * cosf(getAngle());
 }
 
 float Vector::getAngle()
@@ -79,6 +86,12 @@ float Vector::getAngleD()
     return (getAngle()*180)/M_PI;
 }
 
+float Vector::getAngleBetween(Vector* v)
+{
+    Vector* v_m = v->moove(start.x, start.y);
+    return abs(getAngleD() - v_m->getAngleD());
+}
+
 Vector* Vector::moove(float new_x, float new_y)
 {
     Pos new_start;
@@ -103,6 +116,8 @@ void Vector::rotateD(float angolo_dato)
     temp -> end.y -= delta_y;
     end.x = temp -> end.x;
     end.y = temp -> end.y;
+    angle = v_angle;
+    angleD = getAngleD();
 }
 
 void Vector::toString()
