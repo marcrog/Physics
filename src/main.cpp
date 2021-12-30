@@ -4,51 +4,60 @@
 #include <cstdlib>
 #include <ctime>
 
-bool exe = true;
-
 const float FPS = 0.05;                                     
 Uint32 frameStart;
-//float x = 892.9833352606; // variabile arbitraria - pixel/s
-//float pix_l = 0.000311316; //dimensione pixel
+bool exe = true;
+
+SDL_Event event;
 
 int main()
 {
     mySDLManager* manager = new mySDLManager("Physics Engine", 300, SDL_WINDOWPOS_CENTERED, 
-                                        600, 600, 0); 
+                                        1000, 600, 0); 
     manager->init();              
     Engine* engine = new Engine(manager);
+    engine->collisions = true;
+    engine->gravity = false;
     while(exe)
     {
         engine->reset();
-        manager->setRunning(true);
-        SDL_Event event;
+        manager->isRunning = true;
         //---------------                                        
         srand(time(NULL));
-        Ball* b = new Ball(manager, 300, 300, 50);
+        Ball* b = new Ball(manager, 950, 300, 50, 25, 0);
+        std::list <Vector*> v;
+
+        for(int i=0; i < 1000; i+=25)
+            v.push_back(new Vector(manager, i, 0, i, manager->height));
+        
+        b->fill = true;
+        b->setColorF(0, 255, 0);
+        b->setColor(255, 0, 0);
         engine->addCorps(b);
-        engine->applyCollisions();
-        //engine->applyGravity();
         while (manager -> running())
         {
             frameStart = SDL_GetTicks();
     
             // [
             //Clear window with balck
-            SDL_SetRenderDrawColor(manager -> getRenderer(), 30, 32, 45, 255);
-            SDL_RenderClear(manager -> getRenderer());
+            SDL_SetRenderDrawColor(manager -> renderer, 30, 32, 45, 255);
+            SDL_RenderClear(manager -> renderer);
             //Engine
-            engine->draw();
+            for(Vector* a : v)
+                a->draw();
+            engine->draw();                
             engine->update();
             if(SDL_PollEvent(&event))
             {
                 if(event.key.keysym.sym == SDLK_UP)
                 {
-                    engine->getCorpList().getCorp(0)->fill = true;
+                    engine->corpList.getCorp(0)->fill = true;
                     std::cout << "Ollare";
                 }
             }
+
             //Present Render and handle exit
-            SDL_RenderPresent(manager -> getRenderer());
+            SDL_RenderPresent(manager -> renderer);
             manager -> handleEvents(&exe);
             // ]
     
@@ -60,4 +69,4 @@ int main()
     }
     manager->clean();
     return 0;
-}
+}   

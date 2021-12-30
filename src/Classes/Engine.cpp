@@ -10,11 +10,6 @@ Engine::Engine(mySDLManager* manager){
     initial = this;
 };
 
-mySDLManager* Engine::getManager()
-{
-    return manager;
-}
-
 bool Engine::addCorps(Corp* c)
 {  
     return corpList.add(c);
@@ -23,11 +18,6 @@ bool Engine::addCorps(Corp* c)
 bool Engine::removeCorp(Corp* b)
 {   
     return corpList.remove(b);
-}
-
-CorpList Engine::getCorpList()
-{
-    return corpList;
 }
 
 void Engine::draw()
@@ -48,16 +38,6 @@ void Engine::update()
             temp->applyGravity();
         temp->update();
     }    
-}
-
-void Engine::applyGravity()
-{
-    gravity = true;
-}
-
-void Engine::applyCollisions()
-{
-    collisions = true;
 }
 
 void Engine::reset()

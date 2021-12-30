@@ -78,23 +78,3 @@ void mySDLManager::clean()
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
 }
-
-SDL_Renderer* mySDLManager::getRenderer()
-{
-    return renderer; 
-}
-
-int mySDLManager::getWidth()
-{
-    return width; 
-}
-
-int mySDLManager::getHeight()
-{   
-    return height;
-}
-
-void mySDLManager::setRunning(bool change)
-{
-    isRunning = change;
-}

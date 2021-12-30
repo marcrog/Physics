@@ -19,19 +19,19 @@ Triangle::Triangle(mySDLManager* manager, float mx, float my ,float tx, float ty
     Triangle::left.x = pos.x - l/2;
     Triangle::left.y = top.y - h;
     //ADJUST POSITIONS
-    Utils::adjust(&pos, manager->getHeight());
-    Utils::adjust(&top, manager->getHeight());
-    Utils::adjust(&left, manager->getHeight());
-    Utils::adjust(&right, manager->getHeight());
+    Utils::adjust(&pos, manager->height);
+    Utils::adjust(&top, manager->height);
+    Utils::adjust(&left, manager->height);
+    Utils::adjust(&right, manager->height);
 }
 
 
 void Triangle::draw()
 {
-    SDL_SetRenderDrawColor(manager -> getRenderer(), color[0], color[1] , color[2], 255);
-    SDL_RenderDrawLineF(manager -> getRenderer(), top.x, top.y, right.x, right.y);
-    SDL_RenderDrawLineF(manager -> getRenderer(), top.x, top.y, left.x, left.y);
-    SDL_RenderDrawLineF(manager -> getRenderer(), left.x, left.y, right.x, right.y);
+    SDL_SetRenderDrawColor(manager -> renderer, color[0], color[1] , color[2], 255);
+    SDL_RenderDrawLineF(manager -> renderer, top.x, top.y, right.x, right.y);
+    SDL_RenderDrawLineF(manager -> renderer, top.x, top.y, left.x, left.y);
+    SDL_RenderDrawLineF(manager -> renderer, left.x, left.y, right.x, right.y);
 }
 
 void Triangle::rotateG(float angolo_dato)

@@ -83,33 +83,38 @@ void Ball::adjust(float x0, float y0, float* x, float* y)
 
 void Ball::checkCollisions()
 {
+    // float sxEdge = (pos.x + vel.x + acc.x) - r;
+    // float dxEdge = (pos.x + vel.x + acc.x) + r;
+    // float upEdge = (pos.y + vel.y + acc.y) + r;
+    // float dwEdge = (pos.y + vel.y + acc.y) - r;
     float sxEdge = pos.x - r;
     float dxEdge = pos.x + r;
     float upEdge = pos.y + r;
     float dwEdge = pos.y - r;
-    float elasticità = -1;
-    if(sxEdge < 0)
+    float elasticità = 0;
+    std::cout<<dxEdge<<std::endl;
+    if(sxEdge <= 0)
     {
         pos.x = 0 + r + 1;
         vel.x *= -1;
         //acc.x *= -1;
         vel.x += elasticità;
     }
-    if(dxEdge > manager->width)
+    if(dxEdge >= manager->width)
     {
-        pos.x = manager->width - r - 1;
+        pos.x = manager->width - r;
         vel.x *= -1;
         //acc.x *= -1;
         vel.x -= elasticità;
     }
-    if(dwEdge < 0)
+    if(dwEdge <= 0)
     {
         pos.y = 0 + r + 1;
         vel.y *= -1;
         //acc.y *= -1;
         vel.y += elasticità;
     }
-    if(upEdge > manager->height)
+    if(upEdge >= manager->height)
     {
         pos.y = manager -> height - r - 1;
         vel.y *= -1;
